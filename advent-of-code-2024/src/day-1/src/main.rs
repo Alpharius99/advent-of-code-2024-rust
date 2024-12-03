@@ -1,4 +1,6 @@
-use std::fs;
+
+use utils::get_file_contents;
+
 const FILE_PATH: &str = "input.txt";
 
 fn main() {
@@ -15,18 +17,6 @@ fn main() {
     let distance: i32 = sum_distances(distances);
 
     println!("Day 1 answer is {}", distance);
-}
-
-fn get_file_contents(filename: &str) -> String {
-    let mut content = fs::read_to_string(filename)
-        .expect("Failed to read file");
-
-    // Check for and remove the BOM
-    if content.starts_with('\u{feff}') {
-        content = content.trim_start_matches('\u{feff}').to_string();
-    }
-
-    content
 }
 
 fn get_numbers_from_file_content(file_content: &str) -> Vec<i32> {
