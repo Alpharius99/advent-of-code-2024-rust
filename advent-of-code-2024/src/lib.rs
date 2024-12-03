@@ -11,3 +11,10 @@ pub fn get_file_contents(filename: &str) -> String {
 
     content
 }
+
+pub fn convert_string_vector_to_integer_vector(vector: Vec<&str>) -> Vec<i32> {
+    vector
+        .iter()
+        .map(|s| s.parse::<i32>().expect("Failed to parse string as integer"))
+        .collect()
+}

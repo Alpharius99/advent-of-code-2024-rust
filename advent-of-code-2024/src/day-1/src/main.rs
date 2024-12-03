@@ -1,5 +1,4 @@
-
-use utils::get_file_contents;
+use utils::{convert_string_vector_to_integer_vector, get_file_contents};
 
 const FILE_PATH: &str = "input.txt";
 
@@ -22,12 +21,7 @@ fn main() {
 fn get_numbers_from_file_content(file_content: &str) -> Vec<i32> {
     let string_entries: Vec<&str> = file_content.split_whitespace().collect();
 
-    let int_entries: Vec<i32> = string_entries
-        .iter()
-        .map(|s| s.parse::<i32>().expect("Failed to parse string as integer"))
-        .collect();
-
-    int_entries
+    convert_string_vector_to_integer_vector(string_entries)
 }
 
 fn get_sorted_vector(vec: Vec<i32>, odd: bool) -> Vec<i32> {
