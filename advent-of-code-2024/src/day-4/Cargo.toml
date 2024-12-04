@@ -3,4 +3,12 @@ name = "day-4"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "utils"
+path = "../lib.rs"
+
+[[bin]]
+name = "day-4"
+path = "src/main.rs"
+
 [dependencies]
