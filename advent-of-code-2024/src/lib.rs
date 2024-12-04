@@ -18,3 +18,7 @@ pub fn convert_string_vector_to_integer_vector(vector: Vec<&str>) -> Vec<i32> {
         .map(|s| s.parse::<i32>().expect("Failed to parse string as integer"))
         .collect()
 }
+
+pub fn string_to_int(s: &str) -> i32 {
+    s.parse::<i32>().expect("Failed to parse string as integer")
+}
