@@ -5,10 +5,8 @@ const FILE_PATH: &str = "input.txt";
 fn main() {
 
     let file_content: String = get_file_contents(FILE_PATH);
-    
+
     let grid: Vec<Vec<char>> = get_grid(&file_content);
-    
-    println!("Grid {}x{}", grid.len(), grid[0].len());
     
     println!("Day 4 answer is {:?}", find_chain(&grid, "XMAS"));
 }
@@ -32,7 +30,7 @@ fn find_chain(grid: &Vec<Vec<char>>, target: &str) -> i32 {
     //  1|   |   |   |
     let directions: [(isize, isize); 8] = [
         ( 0,  1), // Right
-        ( 0, -1), // Left
+        (-1,  0), // Left
         ( 1,  0), // Down
         ( 0, -1), // Up
         ( 1,  1), // Down-right
@@ -40,7 +38,7 @@ fn find_chain(grid: &Vec<Vec<char>>, target: &str) -> i32 {
         (-1, -1), // Up-left
         (-1,  1), // Up-right
     ];
-    
+
     let mut count: i32 = 0;
 
     // Iterate through the grid
@@ -77,6 +75,6 @@ fn match_chain(
             return false; // Character mismatch
         }
     }
-    
+
     true
 }
