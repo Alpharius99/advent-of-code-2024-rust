@@ -7,83 +7,91 @@ fn main() {
     let sections: Vec<&str> = file_content.split("\n\n").collect();
     let rules: Vec<&str> = sections[0].lines().collect();
     let updates: Vec<&str> = sections[1].lines().collect();
-    let mut sum: i32 = 0;
+    let mut sum_one: i32 = 0;
+    let mut sum_two: i32 = 0;
 
     for update in updates {
-        let pages: Vec<&str> = get_pages(update);
-        let is_valid: bool = is_update_valid(&pages, &rules);
-        let middle_page_number: i32 = string_to_int(get_middle_pages(&pages));
-        //println!("{} -> {} ({})", update, is_valid, middle_page_number);
-        
-        if is_valid {
-            sum += middle_page_number;
+        let mut pages: Vec<&str> = get_pages(update);
+        let mut violated_rule_index: Option<usize> = find_violated_rule(&pages, &rules);
+        let mut is_initial_valid: bool = true;
+
+        while violated_rule_index != None {
+            is_initial_valid = false;
+            let rule = rules[violated_rule_index.unwrap()];
+            let indexes: Vec<i32> = get_indexes_from_rule(&pages, rule);
+            shift_pages(&mut pages, indexes[0], indexes[1]);
+            violated_rule_index = find_violated_rule(&pages, &rules);
+        }
+
+        if is_initial_valid {
+            sum_one += string_to_int(get_middle_pages(&pages));
+        }
+        else {
+            sum_two += string_to_int(get_middle_pages(&pages));
         }
     }
     
-    println!("Day 3 Part One answer is {}", sum);
+    println!("Day 3 Part One answer is {}", sum_one);
+    println!("Day 3 Part Two answer is {}", sum_two);
+}
+
+fn shift_pages<'a>(pages: &mut Vec<&'a str>, from_index: i32, to_index: i32) -> Vec<&'a str> {
+    if from_index < pages.len() as i32 && to_index < pages.len() as i32 {
+        // Remove the element and store it
+        let element = pages.remove(from_index as usize);
+
+        // Insert the element at the new position
+        pages.insert(to_index as usize, element);
+    }
+    pages.to_owned()
 }
 
 fn get_pages(input: &str) -> Vec<&str> {
     input.split(',').collect()
 }
 
-fn is_update_valid(pages: &Vec<&str>, rules: &Vec<&str>) -> bool {
-    for i in 0..pages.len() {
+fn find_violated_rule(pages: &Vec<&str>, rules: &Vec<&str>) -> Option<usize> {
+    for i_start in 0..pages.len() {
         // check back
-        if !is_valid_back(i as i32, &pages, &rules) {
-            return false;
+        if i_start > 0 {
+            for i in 0..(i_start - 1) {
+                let index: Option<usize> = get_rule(&pages[i], &pages[i_start], &rules);
+
+                if index != None {
+                    return index;
+                }
+            }
         }
-        
+
         // check for
-        if !is_valid_for(i as i32, &pages, &rules) {
-            return false;
-        }
-        
-        if i == 0 {
-            
+        if i_start < pages.len() {
+            for i in i_start..pages.len() {
+                let index: Option<usize> = get_rule(&pages[i_start], &pages[i], &rules);
+
+                if index != None {
+                    return index;
+                }
+            }
         }
     }
-    
-    true
+    None
 }
 
-fn is_valid_back(i_start: i32, pages: &Vec<&str>, rules: &Vec<&str>) -> bool {
-    if i_start <= 0 {
-        return true;
+fn get_rule(left: &str, right: &str, rules: &Vec<&str>) -> Option<usize> {
+    if let Some(found) = rules.iter().position(|&s| s == (format!("{}|{}", right, left))) {
+        return Option::from(found);
     }
-    
-    for i in 0..(i_start - 1) as usize {
-        if is_a_rule_violated(&pages[i], &pages[i_start as usize], &rules) {
-            return false;
-        }
-    }
-    true
+    None
 }
 
-fn is_valid_for(i_start: i32, pages: &Vec<&str>, rules: &Vec<&str>) -> bool {
-    if i_start >= pages.len() as i32 {
-        return true;
-    }
-
-    for i in i_start as usize..pages.len() {
-        if is_a_rule_violated(&pages[i_start as usize], &pages[i], &rules) {
-            return false;
-        }
-    }
-    true
-}
-
-fn is_a_rule_violated(left: &str, right: &str, rules: &Vec<&str>) -> bool {
-    if let Some(found) = rules.iter().find(|&&s| s == (format!("{}|{}", right, left))) {
-        //println!("A violated rule found: {}", found);
-        return true
-    }
-    
-    false
+fn get_indexes_from_rule(pages: &Vec<&str>, rule: &str) -> Vec<i32> {
+    let rule: Vec<&str> = rule.split('|').collect::<Vec<&str>>();
+    let left: Option<usize> = pages.iter().position(|&s| s == rule[0]);
+    let right: Option<usize> = pages.iter().position(|&s| s == rule[1]);
+    vec![left.unwrap() as i32,right.unwrap() as i32]
 }
 
 fn get_middle_pages<'a>(input: &Vec<&'a str>) -> &'a str {
     let index_of_middle: usize = input.len()/2;
-    
     input[index_of_middle]
 }
