@@ -25,12 +25,11 @@ fn main() {
 
         if is_initial_valid {
             sum_one += string_to_int(get_middle_pages(&pages));
-        }
-        else {
+        } else {
             sum_two += string_to_int(get_middle_pages(&pages));
         }
     }
-    
+
     println!("Day 3 Part One answer is {}", sum_one);
     println!("Day 3 Part Two answer is {}", sum_two);
 }
@@ -78,7 +77,10 @@ fn find_violated_rule(pages: &Vec<&str>, rules: &Vec<&str>) -> Option<usize> {
 }
 
 fn get_rule(left: &str, right: &str, rules: &Vec<&str>) -> Option<usize> {
-    if let Some(found) = rules.iter().position(|&s| s == (format!("{}|{}", right, left))) {
+    if let Some(found) = rules
+        .iter()
+        .position(|&s| s == (format!("{}|{}", right, left)))
+    {
         return Option::from(found);
     }
     None
@@ -88,10 +90,10 @@ fn get_indexes_from_rule(pages: &Vec<&str>, rule: &str) -> Vec<i32> {
     let rule: Vec<&str> = rule.split('|').collect::<Vec<&str>>();
     let left: Option<usize> = pages.iter().position(|&s| s == rule[0]);
     let right: Option<usize> = pages.iter().position(|&s| s == rule[1]);
-    vec![left.unwrap() as i32,right.unwrap() as i32]
+    vec![left.unwrap() as i32, right.unwrap() as i32]
 }
 
 fn get_middle_pages<'a>(input: &Vec<&'a str>) -> &'a str {
-    let index_of_middle: usize = input.len()/2;
+    let index_of_middle: usize = input.len() / 2;
     input[index_of_middle]
 }

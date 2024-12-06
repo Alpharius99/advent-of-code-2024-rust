@@ -1,22 +1,21 @@
-use utils::{get_file_contents};
+use utils::get_file_contents;
 
 const FILE_PATH: &str = "input.txt";
 
 fn main() {
-
     let file_content: String = get_file_contents(FILE_PATH);
 
     let grid: Vec<Vec<char>> = get_grid(&file_content);
-    
+
     println!("Day 4 Part One answer is {:?}", find_chain(&grid, "XMAS"));
-    println!("Day 4 Part Two answer is {:?}", find_crossed_chain(&grid, "MAS"));
+    println!(
+        "Day 4 Part Two answer is {:?}",
+        find_crossed_chain(&grid, "MAS")
+    );
 }
 
 fn get_grid(input: &str) -> Vec<Vec<char>> {
-    input
-        .lines()
-        .map(|line| line.chars().collect())
-        .collect()
+    input.lines().map(|line| line.chars().collect()).collect()
 }
 
 fn find_chain(grid: &Vec<Vec<char>>, target: &str) -> i32 {
@@ -30,14 +29,14 @@ fn find_chain(grid: &Vec<Vec<char>>, target: &str) -> i32 {
     //  0|   | X |   |
     //  1|   |   |   |
     let directions: [(isize, isize); 8] = [
-        ( 0,  1), // Right
-        (-1,  0), // Left
-        ( 1,  0), // Down
-        ( 0, -1), // Up
-        ( 1,  1), // Down-right
-        ( 1, -1), // Down-left
+        (0, 1),   // Right
+        (-1, 0),  // Left
+        (1, 0),   // Down
+        (0, -1),  // Up
+        (1, 1),   // Down-right
+        (1, -1),  // Down-left
         (-1, -1), // Up-left
-        (-1,  1), // Up-right
+        (-1, 1),  // Up-right
     ];
 
     let mut count: i32 = 0;
@@ -59,7 +58,7 @@ fn find_chain(grid: &Vec<Vec<char>>, target: &str) -> i32 {
 fn find_crossed_chain(grid: &Vec<Vec<char>>, target: &str) -> i32 {
     let rows: usize = grid.len();
     let cols: usize = grid[0].len();
-    
+
     let mut count: i32 = 0;
 
     for row in 1..rows - 1 {
@@ -97,67 +96,50 @@ fn match_chain(
     true
 }
 
-fn match_cross(grid: &Vec<Vec<char>>,
-    target: &str,
-    row: usize,
-    col: usize
-) -> bool {
+fn match_cross(grid: &Vec<Vec<char>>, target: &str, row: usize, col: usize) -> bool {
     let target: &Vec<char> = &target.chars().collect();
 
     if grid[row][col] != target[1] {
         return false;
     }
 
-    if match_first_chain(grid, target, row, col) &&
-        match_second_chain(grid, target, row, col){
-        return true
-    }
-    
-    false
-}
-
-fn match_first_chain(grid: &Vec<Vec<char>>,
-                     target: &Vec<char>,
-                     row: usize,
-                     col: usize
-) -> bool {
-    // Directions: (row delta, column delta)
-    //   |-1 | 0 | 1 |
-    // -1|   |   |   |
-    //  0|   | X |   |
-    //  1|   |   |   |
-    if grid[row - 1][col - 1] == target[0] &&
-        grid[row + 1][col + 1] == target[2] {
-        return true;
-    }
-
-    if grid[row + 1][col + 1] == target[0] &&
-        grid[row - 1][col - 1] == target[2] {
+    if match_first_chain(grid, target, row, col) && match_second_chain(grid, target, row, col) {
         return true;
     }
 
     false
 }
 
-fn match_second_chain(grid: &Vec<Vec<char>>,
-                      target: &Vec<char>,
-                      row: usize,
-                      col: usize
-) -> bool {
+fn match_first_chain(grid: &Vec<Vec<char>>, target: &Vec<char>, row: usize, col: usize) -> bool {
     // Directions: (row delta, column delta)
     //   |-1 | 0 | 1 |
     // -1|   |   |   |
     //  0|   | X |   |
     //  1|   |   |   |
-    if grid[row - 1][col + 1] == target[0] &&
-        grid[row + 1][col - 1] == target[2] {
+    if grid[row - 1][col - 1] == target[0] && grid[row + 1][col + 1] == target[2] {
         return true;
     }
 
-    if grid[row + 1][col - 1] == target[0] &&
-        grid[row - 1][col + 1] == target[2] {
+    if grid[row + 1][col + 1] == target[0] && grid[row - 1][col - 1] == target[2] {
         return true;
     }
-    
+
+    false
+}
+
+fn match_second_chain(grid: &Vec<Vec<char>>, target: &Vec<char>, row: usize, col: usize) -> bool {
+    // Directions: (row delta, column delta)
+    //   |-1 | 0 | 1 |
+    // -1|   |   |   |
+    //  0|   | X |   |
+    //  1|   |   |   |
+    if grid[row - 1][col + 1] == target[0] && grid[row + 1][col - 1] == target[2] {
+        return true;
+    }
+
+    if grid[row + 1][col - 1] == target[0] && grid[row - 1][col + 1] == target[2] {
+        return true;
+    }
+
     false
 }

@@ -6,24 +6,30 @@ const REGEX_MUL: &str = r"mul\(\d{1,3},\d{1,3}\)";
 
 fn main() {
     let file_content: String = get_file_contents(FILE_PATH);
-    
-    println!("Day 3 Part One answer is {}", calculate_sum(get_matches(&file_content, REGEX_MUL)));
-    
+
+    println!(
+        "Day 3 Part One answer is {}",
+        calculate_sum(get_matches(&file_content, REGEX_MUL))
+    );
+
     let mut cleaned_file_content: String = file_content
         .replace("\r\n", "")
         .replace('\n', "")
         .replace('\r', "");
-    
+
     cleaned_file_content = clean_string(&cleaned_file_content, r"don't\(\).*?do\(\)");
-    
-    println!("Day 3 Part Two answer is {}", calculate_sum(get_matches(&cleaned_file_content, REGEX_MUL)));
+
+    println!(
+        "Day 3 Part Two answer is {}",
+        calculate_sum(get_matches(&cleaned_file_content, REGEX_MUL))
+    );
 }
 
 fn get_matches<'a>(file_content: &'a str, pattern: &str) -> Vec<&'a str> {
     let re: Regex = Regex::new(pattern).unwrap();
-    
+
     let matches: Vec<&str> = re.find_iter(&file_content).map(|m| m.as_str()).collect();
-    
+
     matches
 }
 
@@ -38,7 +44,7 @@ fn calculate_sum(matches: Vec<&str>) -> i32 {
 
         sum += a * b;
     }
-    
+
     sum
 }
 
