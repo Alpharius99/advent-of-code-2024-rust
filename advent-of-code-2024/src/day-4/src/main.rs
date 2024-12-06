@@ -1,4 +1,4 @@
-use utils::get_file_contents;
+use utils::{get_file_contents, get_grid};
 
 const FILE_PATH: &str = "input.txt";
 
@@ -12,10 +12,6 @@ fn main() {
         "Day 4 Part Two answer is {:?}",
         find_crossed_chain(&grid, "MAS")
     );
-}
-
-fn get_grid(input: &str) -> Vec<Vec<char>> {
-    input.lines().map(|line| line.chars().collect()).collect()
 }
 
 fn find_chain(grid: &Vec<Vec<char>>, target: &str) -> i32 {
