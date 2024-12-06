@@ -21,3 +21,7 @@ pub fn convert_string_vector_to_integer_vector(vector: Vec<&str>) -> Vec<i32> {
 pub fn string_to_int(s: &str) -> i32 {
     s.parse::<i32>().expect("Failed to parse string as integer")
 }
+
+pub fn get_grid(input: &str) -> Vec<Vec<char>> {
+    input.lines().map(|line| line.chars().collect()).collect()
+}
