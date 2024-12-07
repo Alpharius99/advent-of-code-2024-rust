@@ -19,10 +19,15 @@ pub fn main() {
     // main loop
     let mut sum = 0;
     lines.iter().for_each(|line| {
-        let result = check_line(line);
-        match result {
-            Some(v) => sum += v,
-            None => (),
+        // let result = check_line(line);
+        // match result {
+        //     Some(v) => sum += v,
+        //     None => (),
+        // }
+
+        if let Some(v) = check_line_backward(line) {
+            println!("Passed {}", v);
+            sum += v;
         }
     });
 
@@ -101,6 +106,59 @@ fn check_line(line: &str) -> Option<i64> {
         }
     }
     None
+}
+
+fn check_line_backward(line: &str) -> Option<i64> {
+    let x = get_expected_result(line);
+    let mut numbers: Vec<i64> = get_numbers(line);
+
+    println!("-----------------------------------------------{}", line);
+
+    if check_step(x, &mut numbers, true) {
+        return Some(x);
+    }
+
+    None
+}
+
+fn check_step(mut expected: i64, numbers: &mut Vec<i64>, mut flag: bool) -> bool {
+    if numbers.len() == 0 {
+        return true;
+    }
+
+    if numbers.len() == 1 {
+        println!("{}?{}", expected, numbers[0]);
+        return expected == numbers[0];
+    }
+
+    println!("{:?} ? {:?}", numbers, expected);
+
+    if ends_with_digits(expected, *numbers.last().unwrap()) && flag {
+        println!("Ends with {}", numbers.last().unwrap());
+        expected = truncate_digits(&mut expected, *numbers.last().unwrap());
+        flag = false;
+    } else if expected % numbers.last().unwrap() == 0 {
+        println!("/ {}", numbers.last().unwrap());
+        expected /= numbers.last().unwrap();
+        flag = true;
+    } else {
+        println!("- {}", numbers.last().unwrap());
+        expected -= numbers.last().unwrap();
+        flag = true;
+    }
+
+    numbers.truncate(numbers.len() - 1);
+    check_step(expected, numbers, flag)
+}
+
+fn ends_with_digits(num: i64, last: i64) -> bool {
+    let num_str = num.to_string();
+    let last_str = last.to_string();
+    num_str.ends_with(&last_str)
+}
+
+fn truncate_digits(num: &mut i64, suffix: i64) -> i64 {
+    (*num - suffix) / (10 * suffix.to_string().len() as i64)
 }
 
 fn get_sum(numbers: &Vec<i64>) -> i64 {
