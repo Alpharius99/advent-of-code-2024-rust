@@ -3,10 +3,11 @@ use utils::{get_file_contents, string_to_int};
 
 const FILE_PATH: &str = "input";
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum Operation {
     Add,
     Multiple,
+    Concatenation,
 }
 
 pub fn main() {
@@ -15,15 +16,13 @@ pub fn main() {
 
     let lines: Vec<&str> = file_content.split("\n").collect();
 
-    // println!("{:?}", lines);
-
     // main loop
     let mut sum = 0;
     lines.iter().for_each(|line| {
         let result = check_line(line);
         match result {
             Some(v) => sum += v,
-            None => print!(""),
+            None => (),
         }
     });
 
@@ -58,18 +57,20 @@ fn check_line(line: &str) -> Option<i64> {
 
     // all additions only
     if get_sum(&numbers) == x {
-        // println!("Pass {} = {}", join_integers(&numbers, " + "), x);
         return Some(x);
     }
 
     // all multipliers only
     if get_product(&numbers) == x {
-        // println!("Pass {} = {}", join_integers(&numbers, " * "), x);
         return Some(x);
     }
 
     // get all permutations
-    let operations = vec![Operation::Add, Operation::Multiple];
+    let operations = vec![
+        Operation::Add,
+        Operation::Multiple,
+        Operation::Concatenation,
+    ];
     let mut current = Vec::new();
     let mut permutations = Vec::new();
     generate_permutations(
@@ -79,32 +80,23 @@ fn check_line(line: &str) -> Option<i64> {
         &mut permutations,
     );
 
-    // println!("Line {}", line);
-    // println!("Total permutations: {}", permutations.len());
-
-    // test all permutations
     for p in permutations {
-        // println!("{:?}", p);
-
-        let mut result: i64 = numbers[0];
-        let mut s = String::new();
-        s.push_str(&numbers[0].to_string());
+        let mut result = numbers[0];
 
         for j in 1..numbers.len() {
             match p[j - 1] {
-                Operation::Multiple => {
-                    result *= numbers[j];
-                    s.push_str(" * ");
-                }
                 Operation::Add => {
                     result += numbers[j];
-                    s.push_str(" + ");
+                }
+                Operation::Multiple => {
+                    result *= numbers[j];
+                }
+                Operation::Concatenation => {
+                    result = concatenate_numbers(result, numbers[j]);
                 }
             }
-            s.push_str(&numbers[j].to_string());
         }
         if result == x {
-            // println!("Pass {} = {}", s, x);
             return Some(x);
         }
     }
@@ -143,4 +135,9 @@ fn generate_permutations(
         generate_permutations(n, values, current, results);
         current.pop();
     }
+}
+
+fn concatenate_numbers(a: i64, b: i64) -> i64 {
+    let concatenated = format!("{}{}", a, b);
+    concatenated.parse::<i64>().unwrap()
 }
