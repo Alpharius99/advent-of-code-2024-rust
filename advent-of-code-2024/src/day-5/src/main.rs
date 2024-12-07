@@ -1,6 +1,6 @@
 use utils::{get_file_contents, string_to_int};
 
-const FILE_PATH: &str = "input.txt";
+const FILE_PATH: &str = "input";
 
 fn main() {
     let file_content: String = get_file_contents(FILE_PATH);

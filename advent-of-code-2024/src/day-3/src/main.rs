@@ -1,7 +1,7 @@
 use regex::Regex;
 use utils::{get_file_contents, string_to_int};
 
-const FILE_PATH: &str = "input.txt";
+const FILE_PATH: &str = "input";
 const REGEX_MUL: &str = r"mul\(\d{1,3},\d{1,3}\)";
 
 fn main() {
