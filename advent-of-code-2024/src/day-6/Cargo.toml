@@ -12,3 +12,4 @@ name = "day-6"
 path = "src/main.rs"
 
 [dependencies]
+rayon = "1.10.0"

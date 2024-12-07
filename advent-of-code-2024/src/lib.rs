@@ -25,3 +25,10 @@ pub fn string_to_int(s: &str) -> i32 {
 pub fn get_grid(input: &str) -> Vec<Vec<char>> {
     input.lines().map(|line| line.chars().collect()).collect()
 }
+
+pub fn print_grid(grid: &Vec<Vec<char>>) {
+    for row in grid.iter() {
+        let joined: String = row.into_iter().collect();
+        println!("{:?}", joined);
+    }
+}
