@@ -24,9 +24,9 @@ fn main() {
         }
 
         if is_initial_valid {
-            sum_one += string_to_int(get_middle_pages(&pages));
+            sum_one += string_to_int::<i32>(get_middle_pages(&pages)).expect("REASON");
         } else {
-            sum_two += string_to_int(get_middle_pages(&pages));
+            sum_two += string_to_int::<i32>(get_middle_pages(&pages)).expect("REASON");
         }
     }
 
