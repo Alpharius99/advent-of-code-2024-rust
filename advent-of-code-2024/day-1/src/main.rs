@@ -1,8 +1,13 @@
+use std::env;
 use utils::{convert_string_vector_to_integer_vector, get_file_contents};
 
 const FILE_PATH: &str = "input";
 
 fn main() {
+    println!(
+        "Current working directory: {:?}",
+        env::current_dir().unwrap()
+    );
     let file_content: String = get_file_contents(FILE_PATH);
 
     let int_entries: Vec<i32> = get_numbers_from_file_content(&file_content);

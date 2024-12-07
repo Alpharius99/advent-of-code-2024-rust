@@ -1,14 +1,15 @@
 [package]
-name = "day-4"
+name = "day-6"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
 name = "utils"
-path = "../lib.rs"
+path = "../shared_lib/src/lib.rs"
 
 [[bin]]
-name = "day-4"
+name = "day-6"
 path = "src/main.rs"
 
 [dependencies]
+rayon = "1.10.0"

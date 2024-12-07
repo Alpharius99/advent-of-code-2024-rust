@@ -1,7 +1,9 @@
 use std::fs;
+use std::str::FromStr;
 
 pub fn get_file_contents(filename: &str) -> String {
-    let mut content = fs::read_to_string(filename).expect("Failed to read file");
+    let mut content =
+        fs::read_to_string(filename).expect(format!("Failed to read file {}", filename).as_str());
 
     // Check for and remove the BOM
     if content.starts_with('\u{feff}') {
@@ -18,8 +20,21 @@ pub fn convert_string_vector_to_integer_vector(vector: Vec<&str>) -> Vec<i32> {
         .collect()
 }
 
-pub fn string_to_int(s: &str) -> i32 {
-    s.parse::<i32>().expect("Failed to parse string as integer")
+pub fn string_to_int32(s: &str) -> i32 {
+    s.parse::<i32>()
+        .expect("Failed to parse string as integer 32")
+}
+
+pub fn string_to_int64(s: &str) -> i64 {
+    s.parse::<i64>()
+        .expect("Failed to parse string as integer 64")
+}
+
+pub fn string_to_int<T>(input: &str) -> Result<T, T::Err>
+where
+    T: FromStr,
+{
+    input.parse::<T>()
 }
 
 pub fn get_grid(input: &str) -> Vec<Vec<char>> {
@@ -31,4 +46,15 @@ pub fn print_grid(grid: &Vec<Vec<char>>) {
         let joined: String = row.into_iter().collect();
         println!("{:?}", joined);
     }
+}
+
+pub fn join_integers<T>(numbers: &Vec<T>, delimiter: &str) -> String
+where
+    T: FromStr + ToString,
+{
+    numbers
+        .iter()
+        .map(|n| n.to_string())
+        .collect::<Vec<String>>()
+        .join(delimiter)
 }

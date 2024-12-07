@@ -38,9 +38,9 @@ fn calculate_sum(matches: Vec<&str>) -> i32 {
 
     for item in &matches {
         let a_string = extract_between(item, '(', ',');
-        let a: i32 = string_to_int(a_string.expect("Awaited a string"));
+        let a: i32 = string_to_int::<i32>(a_string.expect("Awaited a string")).expect("REASON");
         let b_string = extract_between(item, ',', ')');
-        let b: i32 = string_to_int(b_string.expect("Awaited a string"));
+        let b: i32 = string_to_int(b_string.expect("Awaited a string")).expect("REASON");
 
         sum += a * b;
     }
