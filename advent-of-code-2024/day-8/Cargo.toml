@@ -12,3 +12,6 @@ name = "day-8"
 path = "src/main.rs"
 
 [dependencies]
+
+[features]
+debug = []

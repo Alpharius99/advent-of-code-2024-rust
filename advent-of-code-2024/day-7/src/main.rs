@@ -1,7 +1,7 @@
 use std::time::Instant;
 use utils::{get_file_contents, string_to_int};
 
-const FILE_PATH: &str = "input";
+const FILE_PATH: &str = "sample";
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum Operation {
@@ -17,22 +17,24 @@ pub fn main() {
     let lines: Vec<&str> = file_content.split("\n").collect();
 
     // main loop
-    let mut sum = 0;
+    let mut sum_brute_force = 0;
+    let mut sum_reverse = 0;
     lines.iter().for_each(|line| {
-        // let result = check_line(line);
-        // match result {
-        //     Some(v) => sum += v,
-        //     None => (),
-        // }
+        // brute force
+        if let Some(v) = check_line(line) {
+            sum_brute_force += v;
+        }
 
+        // reverse strategy
         if let Some(v) = check_line_backward(line) {
+            #[cfg(feature = "sample")]
             println!("Passed {}", v);
-            sum += v;
+            sum_reverse += v;
         }
     });
 
-    println!("Day 6 Part One answer is {}", sum);
-    println!("Day 6 Part Two answer is {}", sum);
+    println!("Day 6 Part Two answer is {}", sum_brute_force);
+    println!("Day 6 Part Two answer is {}", sum_reverse);
 
     println!("Execution time: {:.2?}", start_time.elapsed());
 }
@@ -67,6 +69,11 @@ fn check_line(line: &str) -> Option<i64> {
 
     // all multipliers only
     if get_product(&numbers) == x {
+        return Some(x);
+    }
+    
+    // all concatenations only
+    if get_concatenation(&numbers) == x {
         return Some(x);
     }
 
@@ -112,43 +119,77 @@ fn check_line_backward(line: &str) -> Option<i64> {
     let x = get_expected_result(line);
     let mut numbers: Vec<i64> = get_numbers(line);
 
+    #[cfg(feature = "sample")]
     println!("-----------------------------------------------{}", line);
 
-    if check_step(x, &mut numbers, true) {
+    // all additions only
+    if get_sum(&numbers) == x {
+        return Some(x);
+    }
+
+    // all multipliers only
+    if get_product(&numbers) == x {
+        return Some(x);
+    }
+
+    // all concatenations only
+    if get_concatenation(&numbers) == x {
+        return Some(x);
+    }
+
+    if check_step(x, &mut numbers) {
         return Some(x);
     }
 
     None
 }
 
-fn check_step(mut expected: i64, numbers: &mut Vec<i64>, mut flag: bool) -> bool {
+fn check_step(mut expected: i64, numbers: &mut Vec<i64>) -> bool {
     if numbers.len() == 0 {
         return true;
     }
 
     if numbers.len() == 1 {
+        #[cfg(feature = "sample")]
         println!("{}?{}", expected, numbers[0]);
         return expected == numbers[0];
     }
 
+    #[cfg(feature = "sample")]
     println!("{:?} ? {:?}", numbers, expected);
 
-    if ends_with_digits(expected, *numbers.last().unwrap()) && flag {
-        println!("Ends with {}", numbers.last().unwrap());
-        expected = truncate_digits(&mut expected, *numbers.last().unwrap());
-        flag = false;
+    if let Some(suffix) = check_concatenation(expected, numbers) {
+        #[cfg(feature = "sample")]
+        println!("Ends with {}", suffix);
+        expected = truncate_digits(&mut expected, suffix);
     } else if expected % numbers.last().unwrap() == 0 {
+        #[cfg(feature = "sample")]
         println!("/ {}", numbers.last().unwrap());
         expected /= numbers.last().unwrap();
-        flag = true;
     } else {
+        #[cfg(feature = "sample")]
         println!("- {}", numbers.last().unwrap());
         expected -= numbers.last().unwrap();
-        flag = true;
     }
 
     numbers.truncate(numbers.len() - 1);
-    check_step(expected, numbers, flag)
+    check_step(expected, numbers)
+}
+
+fn check_concatenation(expected: i64, numbers: &Vec<i64>) -> Option<i64> {
+    let mut tmp_numbers = numbers.clone();
+    for i in 0..numbers.len() {
+        if i > 0 {
+            tmp_numbers.remove(0);
+        }
+        let n = get_concatenation(&tmp_numbers);
+        
+        if ends_with_digits(expected, n) {
+            let s: String = tmp_numbers.iter().map(|x| x.to_string()).collect();
+            return Some(s.parse::<i64>().expect("Failed to parse string as int"));
+        }
+    }
+    None
 }
 
 fn ends_with_digits(num: i64, last: i64) -> bool {
@@ -175,6 +216,14 @@ fn get_product(numbers: &Vec<i64>) -> i64 {
         result *= numbers[i];
     }
     result
+}
+
+fn get_concatenation(numbers: &Vec<i64>) -> i64 {
+    let mut s = String::new();
+    for i in 0..numbers.len() {
+        s.push_str(numbers[i].to_string().as_str());
+    }
+    s.parse::<i64>().unwrap()
 }
 
 fn generate_permutations(
