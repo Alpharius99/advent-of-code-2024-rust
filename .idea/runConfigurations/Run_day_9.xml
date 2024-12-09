@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run day-8" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
-    <option name="buildProfileId" value="dev" />
-    <option name="command" value="run --package day-8 --bin day-8 --features debug" />
-    <option name="workingDirectory" value="file://$PROJECT_DIR$/advent-of-code-2024/day-8" />
+  <configuration default="false" name="Run day-9" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+    <option name="buildProfileId" value="release" />
+    <option name="command" value="run --package day-9 --bin day-9 --features debug" />
+    <option name="workingDirectory" value="file://$PROJECT_DIR$/advent-of-code-2024/day-9" />
     <envs />
     <option name="emulateTerminal" value="true" />
     <option name="channel" value="DEFAULT" />
