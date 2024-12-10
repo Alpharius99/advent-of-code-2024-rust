@@ -13,6 +13,7 @@
       <sourceFolder url="file://$MODULE_DIR$/advent-of-code-2024/day-8/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/advent-of-code-2024/day-9/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/advent-of-code-2024/shared_lib/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/advent-of-code-2024/day-10/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/advent-of-code-2024/target" />
       <excludeFolder url="file://$MODULE_DIR$/advent-of-code-2024/day-1/target" />
       <excludeFolder url="file://$MODULE_DIR$/advent-of-code-2024/day-2/target" />
