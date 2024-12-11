@@ -125,7 +125,7 @@ fn find_neighbors(
     );
 
     if value == end_value {
-        if unique { 
+        if unique {
             neighbors.sort();
             neighbors.dedup();
         }
@@ -140,9 +140,30 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_part_one() {
-        let input = get_file_contents(FILE_PATH);
+    fn test_samlpe_part_one() {
+        let input = get_file_contents("sample");
         let array = get_2d_array(&input);
         assert_eq!(get_result_part_one(&array), 36);
+    }
+
+    #[test]
+    fn test_samlpe_part_two() {
+        let input = get_file_contents("sample");
+        let array = get_2d_array(&input);
+        assert_eq!(get_result_part_two(&array), 81);
+    }
+
+    #[test]
+    fn test_input_part_one() {
+        let input = get_file_contents("input");
+        let array = get_2d_array(&input);
+        assert_eq!(get_result_part_one(&array), 709);
+    }
+
+    #[test]
+    fn test_input_part_two() {
+        let input = get_file_contents("input");
+        let array = get_2d_array(&input);
+        assert_eq!(get_result_part_two(&array), 1326);
     }
 }
