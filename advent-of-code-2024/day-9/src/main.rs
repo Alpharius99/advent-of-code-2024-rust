@@ -16,10 +16,16 @@ fn main() {
     println!("Len of map: {}", file_map.len());
 
     // Part One
-    println!("Day 9 Part One answer is {}", calc_checksum(&shift_bytes_part1(&file_map)));
+    println!(
+        "Day 9 Part One answer is {}",
+        calc_checksum(&shift_bytes_part1(&file_map))
+    );
 
     // Part Two
-    println!("Day 9 Part Two answer is {}", calc_checksum(&shift_bytes_part2(&file_map)));
+    println!(
+        "Day 9 Part Two answer is {}",
+        calc_checksum(&shift_bytes_part2(&file_map))
+    );
 
     println!("Execution time: {:.2?}", start_time.elapsed());
 }

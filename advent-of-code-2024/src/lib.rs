@@ -1,10 +1,9 @@
-use ndarray::Array2;
 use std::fs;
 use std::str::FromStr;
 
 pub fn get_file_contents(filename: &str) -> String {
     let mut content =
-        fs::read_to_string(filename).expect(format!("Failed to read file {}", filename).as_str());
+        fs::read_to_string(filename).unwrap_or_else(|_| panic!("Failed to read file {}", filename));
 
     // Check for and remove the BOM
     if content.starts_with('\u{feff}') {
@@ -14,27 +13,11 @@ pub fn get_file_contents(filename: &str) -> String {
     content
 }
 
-pub fn get_2d_array(input: &str) -> Array2<usize> {
-    // Split the input into rows
-    let rows: Vec<Vec<usize>> = input
-        .lines()
-        .map(|line| {
-            line.chars() // Iterate over characters in each line
-                .filter(|c| c.is_digit(10)) // Keep only digit characters
-                .map(|c| c.to_digit(10).unwrap() as usize) // Convert char to i32
-                .collect::<Vec<_>>() // Collect into a vector
-        })
-        .collect();
-
-    // Determine the shape of the array
-    let num_rows = rows.len();
-    let num_cols = rows[0].len();
-
-    // Flatten the rows into a single vector
-    let flattened: Vec<usize> = rows.into_iter().flatten().collect();
-
-    // Convert the flattened vector into an Array2
-    Array2::from_shape_vec((num_rows, num_cols), flattened).unwrap()
+pub fn get_1d_vector(input: &str) -> Vec<usize> {
+    input
+        .split_whitespace() // Split the string by whitespace
+        .filter_map(|s| s.parse::<usize>().ok()) // Parse each part to usize, filtering out invalid entries
+        .collect() // Collect into a Vec<usize>
 }
 
 pub fn get_grid(input: &str) -> Vec<Vec<char>> {

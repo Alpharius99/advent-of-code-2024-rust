@@ -71,7 +71,7 @@ fn check_line(line: &str) -> Option<i64> {
     if get_product(&numbers) == x {
         return Some(x);
     }
-    
+
     // all concatenations only
     if get_concatenation(&numbers) == x {
         return Some(x);
@@ -183,7 +183,7 @@ fn check_concatenation(expected: i64, numbers: &Vec<i64>) -> Option<i64> {
             tmp_numbers.remove(0);
         }
         let n = get_concatenation(&tmp_numbers);
-        
+
         if ends_with_digits(expected, n) {
             let s: String = tmp_numbers.iter().map(|x| x.to_string()).collect();
             return Some(s.parse::<i64>().expect("Failed to parse string as int"));

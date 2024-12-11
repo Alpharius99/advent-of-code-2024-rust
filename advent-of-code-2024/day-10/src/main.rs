@@ -1,7 +1,7 @@
 #![warn(clippy::all, clippy::pedantic)]
-use ndarray::Array2;
 use std::time::Instant;
-use utils::{get_2d_array, get_file_contents};
+use ndarray::Array2;
+use utils::{get_file_contents};
 
 const FILE_PATH: &str = "input";
 const DIRECTIONS: [(isize, isize); 4] = [
@@ -44,7 +44,7 @@ fn get_result(array: &Array2<usize>, unique: bool) -> usize {
         match find_neighbors(array, targets, TOP_DOWN, unique) {
             Some(neighbors) => {
                 result += neighbors.len();
-            },
+            }
             None => (),
         }
     }
@@ -70,12 +70,7 @@ fn find_starts(array: &Array2<usize>, reverse: bool) -> Vec<(usize, usize)> {
     }
 
     #[cfg(feature = "debug")]
-    println!(
-        "Found {} of value {} ({:?})",
-        starts.len(),
-        target,
-        starts
-    );
+    println!("Found {} of value {} ({:?})", starts.len(), target, starts);
     starts
 }
 
@@ -83,7 +78,7 @@ fn find_neighbors(
     array: &Array2<usize>,
     targets: Vec<(usize, usize)>,
     reverse: bool,
-    unique: bool
+    unique: bool,
 ) -> Option<Vec<(usize, usize)>> {
     let rows = array.nrows();
     let cols = array.ncols();
@@ -133,6 +128,29 @@ fn find_neighbors(
     } else {
         find_neighbors(&array, neighbors, reverse, unique)
     }
+}
+
+pub fn get_2d_array(input: &str) -> Array2<usize> {
+    // Split the input into rows
+    let rows: Vec<Vec<usize>> = input
+        .lines()
+        .map(|line| {
+            line.chars() // Iterate over characters in each line
+                .filter(|c| c.is_digit(10)) // Keep only digit characters
+                .map(|c| c.to_digit(10).unwrap() as usize) // Convert char to i32
+                .collect::<Vec<_>>() // Collect into a vector
+        })
+        .collect();
+
+    // Determine the shape of the array
+    let num_rows = rows.len();
+    let num_cols = rows[0].len();
+
+    // Flatten the rows into a single vector
+    let flattened: Vec<usize> = rows.into_iter().flatten().collect();
+
+    // Convert the flattened vector into an Array2
+    Array2::from_shape_vec((num_rows, num_cols), flattened).unwrap()
 }
 
 #[cfg(test)]
