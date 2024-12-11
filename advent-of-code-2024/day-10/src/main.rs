@@ -140,14 +140,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_samlpe_part_one() {
+    fn test_sample_part_one() {
         let input = get_file_contents("sample");
         let array = get_2d_array(&input);
         assert_eq!(get_result_part_one(&array), 36);
     }
 
     #[test]
-    fn test_samlpe_part_two() {
+    fn test_sample_part_two() {
         let input = get_file_contents("sample");
         let array = get_2d_array(&input);
         assert_eq!(get_result_part_two(&array), 81);
