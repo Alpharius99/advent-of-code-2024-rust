@@ -2,6 +2,9 @@
 use std::time::Instant;
 use utils::{get_file_contents};
 
+#[cfg(feature = "debug")]
+const FILE_PATH: &str = "sample";
+#[!cfg(feature = "debug")]
 const FILE_PATH: &str = "input";
 
 fn main() {

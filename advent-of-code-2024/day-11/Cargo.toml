@@ -1,17 +1,17 @@
 [package]
-name = "day-8"
+name = "day-11"
 version = "0.1.0"
 edition = "2021"
+
+[dependencies]
 
 [lib]
 name = "utils"
 path = "../shared_lib/src/lib.rs"
 
 [[bin]]
-name = "day-8"
+name = "day-10"
 path = "src/main.rs"
-
-[dependencies]
 
 [features]
 debug = []
