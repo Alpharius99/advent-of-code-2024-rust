@@ -13,10 +13,10 @@ pub fn get_file_contents(filename: &str) -> String {
     content
 }
 
-pub fn get_1d_vector(input: &str) -> Vec<usize> {
+pub fn get_1d_vector(input: &str) -> Vec<u64> {
     input
         .split_whitespace() // Split the string by whitespace
-        .filter_map(|s| s.parse::<usize>().ok()) // Parse each part to usize, filtering out invalid entries
+        .filter_map(|s| s.parse::<u64>().ok()) // Parse each part to usize, filtering out invalid entries
         .collect() // Collect into a Vec<usize>
 }
 
