@@ -12,7 +12,7 @@ fn main() {
     let start_time = Instant::now();
     let data = preamble();
 
-    println!("Day 11 Part One answer is {}", get_result_part_one(&mut data.clone()));
+    println!("Day 11 Part One answer is {}", get_result_part_one(&data.clone()));
     println!("Day 11 Part Two answer is {}", get_result_part_two(&data));
 
     println!("Execution time: {:.2?}", start_time.elapsed());
@@ -48,7 +48,6 @@ fn get_result_part_two(vec: &Vec<u64>) -> u64 {
 
 fn blink(value: u64, mut times: u32, cache: &mut Cache) -> u64 {
     let stone = (value, times);
-    // println!("{times:?}: {value}");
     if times == 0 {
         return 1;
     }
@@ -71,8 +70,6 @@ fn blink(value: u64, mut times: u32, cache: &mut Cache) -> u64 {
     };
     
     cache.items.insert(stone, result);
-    
-    // println!("{stone:?}: {result}");
     
     result
 }
