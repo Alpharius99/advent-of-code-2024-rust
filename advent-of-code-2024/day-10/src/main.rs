@@ -130,29 +130,6 @@ fn find_neighbors(
     }
 }
 
-pub fn get_2d_array(input: &str) -> Array2<usize> {
-    // Split the input into rows
-    let rows: Vec<Vec<usize>> = input
-        .lines()
-        .map(|line| {
-            line.chars() // Iterate over characters in each line
-                .filter(|c| c.is_digit(10)) // Keep only digit characters
-                .map(|c| c.to_digit(10).unwrap() as usize) // Convert char to i32
-                .collect::<Vec<_>>() // Collect into a vector
-        })
-        .collect();
-
-    // Determine the shape of the array
-    let num_rows = rows.len();
-    let num_cols = rows[0].len();
-
-    // Flatten the rows into a single vector
-    let flattened: Vec<usize> = rows.into_iter().flatten().collect();
-
-    // Convert the flattened vector into an Array2
-    Array2::from_shape_vec((num_rows, num_cols), flattened).unwrap()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;

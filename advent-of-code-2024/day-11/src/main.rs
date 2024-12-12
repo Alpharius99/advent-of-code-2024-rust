@@ -1,5 +1,5 @@
 #![warn(clippy::all, clippy::pedantic)]
-use std::collections::HashMap;
+use std::collections::HashMap; // FxHashMap ?
 use std::time::Instant;
 use utils::{get_1d_vector, get_file_contents};
 
