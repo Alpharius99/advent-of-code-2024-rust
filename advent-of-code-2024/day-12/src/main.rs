@@ -219,8 +219,7 @@ fn count_corners(region: &Vec<Point>) -> usize {
     corners.len() + inner_corners.len()
 }
 
-fn get_boundaries(points: &Vec<Point>) -> HashSet<Point> {
-    // let deltas = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+fn get_boundaries(points: &[Point]) -> HashSet<Point> {
     points
         .iter()
         .flat_map(|p| {
