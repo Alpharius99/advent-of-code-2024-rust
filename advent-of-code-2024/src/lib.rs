@@ -2,6 +2,37 @@ use std::fs;
 use std::str::FromStr;
 use ndarray::Array2;
 
+pub const DIRECTIONS: [(isize, isize); 4] = [
+    (-1, 0), // Above
+    (0, -1), // Left
+    (0, 1),  // Right
+    (1, 0),  // Below
+];
+
+pub const DIAGONALES: [(isize, isize); 4] = [
+    (-1, -1), // Above-left
+    (1, -1),  // Below-left
+    (1, 1),   // Below-right
+    (-1, 1),  // Above-right
+];
+
+pub const FULL_DIRECTIONS: [(isize, isize); 8] = [
+    (-1, 0),  // Above
+    (0, -1),  // Left
+    (0, 1),   // Right
+    (1, 0),   // Below
+    (-1, -1), // Above-left
+    (1, -1),  // Below-left
+    (1, 1),   // Below-right
+    (-1, 1),  // Above-right
+];
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub struct Point {
+    pub row: isize,
+    pub col: isize,
+}
+
 pub fn get_file_contents(filename: &str) -> String {
     let mut content =
         fs::read_to_string(filename).unwrap_or_else(|_| panic!("Failed to read file {}", filename));
@@ -67,7 +98,7 @@ where
         .join(delimiter)
 }
 
-pub fn get_2d_array(input: &str) -> Array2<usize> {
+pub fn get_2d_array_usize(input: &str) -> Array2<usize> {
     // Split the input into rows
     let rows: Vec<Vec<usize>> = input
         .lines()
@@ -85,6 +116,27 @@ pub fn get_2d_array(input: &str) -> Array2<usize> {
 
     // Flatten the rows into a single vector
     let flattened: Vec<usize> = rows.into_iter().flatten().collect();
+
+    // Convert the flattened vector into an Array2
+    Array2::from_shape_vec((num_rows, num_cols), flattened).unwrap()
+}
+
+pub fn get_2d_array_char(input: &str) -> Array2<char> {
+    // Split the input into rows
+    let rows: Vec<Vec<char>> = input
+        .lines()
+        .map(|line| {
+            line.chars() // Iterate over characters in each line
+                .collect::<Vec<_>>() // Collect into a vector
+        })
+        .collect();
+
+    // Determine the shape of the array
+    let num_rows = rows.len();
+    let num_cols = rows[0].len();
+
+    // Flatten the rows into a single vector
+    let flattened: Vec< char> = rows.into_iter().flatten().collect();
 
     // Convert the flattened vector into an Array2
     Array2::from_shape_vec((num_rows, num_cols), flattened).unwrap()
