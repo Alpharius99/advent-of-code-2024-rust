@@ -73,7 +73,7 @@ fn preamble(file_path: &str) -> Vec<ClawMachine> {
 fn get_result_part_one(data: &[ClawMachine]) -> usize {
     let mut num_tokens = 0;
     for x in data.iter() {
-        if let Some(t) = solve_machine(x, 0) {
+        if let Some(t) = solve_cramers_rule(x, 0) {
             #[cfg(feature = "debug")]
             println!("{x:?}: {t}");
             num_tokens += t
@@ -85,7 +85,7 @@ fn get_result_part_one(data: &[ClawMachine]) -> usize {
 fn get_result_part_two(data: &[ClawMachine]) -> usize {
     let mut num_tokens = 0;
     for x in data.iter() {
-        if let Some(t) = solve_machine(x, 10_000_000_000_000) {
+        if let Some(t) = solve_cramers_rule(x, 10_000_000_000_000) {
             #[cfg(feature = "debug")]
             println!("{x:?}: {t}");
             num_tokens += t
@@ -94,9 +94,17 @@ fn get_result_part_two(data: &[ClawMachine]) -> usize {
     num_tokens as usize
 }
 
-fn solve_machine(cm: &ClawMachine, offset: isize) -> Option<isize> {
+fn solve_cramers_rule(cm: &ClawMachine, offset: isize) -> Option<isize> {
     let prize = (cm.prize.x + offset, cm.prize.y + offset);
+    // Calculate the determinant of A
     let det = cm.a.x * cm.b.y - cm.a.y * cm.b.x;
+
+    if det == 0 {
+        // No unique solution if determinant is 0
+        return None;
+    }
+
+    // Calculate the determinants for A_x and A_y, then x and y
     let a = (prize.0 * cm.b.y - prize.1 * cm.b.x) / det;
     let b = (cm.a.x * prize.1 - cm.a.y * prize.0) / det;
     if (cm.a.x * a + cm.b.x * b, cm.a.y * a + cm.b.y * b) == (prize.0, prize.1) {
