@@ -1,17 +1,18 @@
 [package]
-name = "day-12"
+name = "day-13"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 ndarray = "0.16.1"
+regex = "1.11.1"
 
 [lib]
 name = "utils"
 path = "../src/lib.rs"
 
 [[bin]]
-name = "day-12"
+name = "day-13"
 path = "src/main.rs"
 
 [features]

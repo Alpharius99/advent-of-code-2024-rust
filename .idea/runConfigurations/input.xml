@@ -1,7 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="clippy" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
-    <option name="command" value="clippy" />
-    <option name="workingDirectory" value="file://$PROJECT_DIR$/advent-of-code-2024/day-12" />
+  <configuration default="false" name="input" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+    <option name="buildProfileId" value="release" />
+    <option name="command" value="run --package day-13 --bin day-13" />
+    <option name="workingDirectory" value="file://$PROJECT_DIR$/advent-of-code-2024/day-13" />
     <envs />
     <option name="emulateTerminal" value="true" />
     <option name="channel" value="DEFAULT" />
