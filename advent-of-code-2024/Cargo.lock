@@ -7,6 +7,7 @@ name = "advent-of-code-2024"
 version = "0.1.0"
 dependencies = [
  "ndarray",
+ "regex",
 ]
 
 [[package]]
@@ -80,6 +81,21 @@ version = "0.1.0"
 dependencies = [
  "ndarray",
  "regex",
+]
+
+[[package]]
+name = "day-14"
+version = "0.1.0"
+dependencies = [
+ "ndarray",
+ "regex",
+]
+
+[[package]]
+name = "day-15"
+version = "0.1.0"
+dependencies = [
+ "ndarray",
 ]
 
 [[package]]

@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="test" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
     <option name="buildProfileId" value="dev" />
-    <option name="command" value="test --package day-13 --bin day-13" />
-    <option name="workingDirectory" value="file://$PROJECT_DIR$/advent-of-code-2024/day-13" />
+    <option name="command" value="test --package day-14 --bin day-14" />
+    <option name="workingDirectory" value="file://$PROJECT_DIR$/advent-of-code-2024/day-14" />
     <envs />
     <option name="emulateTerminal" value="true" />
     <option name="channel" value="DEFAULT" />

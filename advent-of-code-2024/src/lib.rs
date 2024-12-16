@@ -1,6 +1,7 @@
 use std::fs;
 use std::str::FromStr;
 use ndarray::Array2;
+use regex::Regex;
 
 pub const DIRECTIONS: [(isize, isize); 4] = [
     (-1, 0), // Above
@@ -140,4 +141,14 @@ pub fn get_2d_array_char(input: &str) -> Array2<char> {
 
     // Convert the flattened vector into an Array2
     Array2::from_shape_vec((num_rows, num_cols), flattened).unwrap()
+}
+
+pub fn get_value_by_regex(s: &str, re: &Regex) -> isize {
+    re.captures(s)
+        .unwrap()
+        .get(1)
+        .unwrap()
+        .as_str()
+        .parse::<isize>()
+        .unwrap()
 }
