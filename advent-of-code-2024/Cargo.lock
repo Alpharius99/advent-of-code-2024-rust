@@ -54,7 +54,9 @@ checksum = "22ec99545bb0ed0ea7bb9b8e1e9122ea386ff8a48c0922e43f36d45ab09e0e80"
 name = "day-1"
 version = "0.1.0"
 dependencies = [
+ "ndarray",
  "num-traits",
+ "regex",
 ]
 
 [[package]]
@@ -96,6 +98,7 @@ name = "day-15"
 version = "0.1.0"
 dependencies = [
  "ndarray",
+ "regex",
 ]
 
 [[package]]

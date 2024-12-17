@@ -3,7 +3,6 @@
 use regex::Regex;
 use std::cmp::Ordering;
 use std::collections::HashMap;
-use std::ops::Index;
 use std::time::Instant;
 use utils::{get_file_contents, get_value_by_regex, Point};
 

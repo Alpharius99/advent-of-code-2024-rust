@@ -1,22 +1,18 @@
-use std::env;
+use std::time::Instant;
 use utils::{convert_string_vector_to_integer_vector, get_file_contents};
 
-const FILE_PATH: &str = "input";
-
 fn main() {
-    println!(
-        "Current working directory: {:?}",
-        env::current_dir().unwrap()
-    );
-    let file_content: String = get_file_contents(FILE_PATH);
-
+    let start_time = Instant::now();
+    #[cfg(feature = "debug")]
+    let file_path: &str = "sample";
+    #[cfg(not(feature = "debug"))]
+    let file_path: &str = "input";
+    
+    let file_content: String = get_file_contents(file_path);
     let int_entries: Vec<i32> = get_numbers_from_file_content(&file_content);
-
     let left: Vec<i32> = get_sorted_vector(int_entries.clone(), false);
     let right: Vec<i32> = get_sorted_vector(int_entries.clone(), true);
-
     let distances: Vec<i32> = calculate_distances(&left, &right);
-
     let distance: i32 = sum_distances(distances);
 
     println!("Day 1 Part One answer is {}", distance);
@@ -24,6 +20,8 @@ fn main() {
     let score = calculate_similarity_score(&left, &right);
 
     println!("Day 1 Part Two answer is {}", score);
+
+    println!("Execution time: {:.2?}", start_time.elapsed());
 }
 
 fn get_numbers_from_file_content(file_content: &str) -> Vec<i32> {

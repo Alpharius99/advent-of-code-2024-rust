@@ -152,3 +152,12 @@ pub fn get_value_by_regex(s: &str, re: &Regex) -> isize {
         .parse::<isize>()
         .unwrap()
 }
+
+pub fn find_coords_of_char(array: &Array2<char>, target: char) -> Option<Point> {
+    // Flatten the array and find the position of the target value
+    let flat_index: usize = array.iter().position(|&x| x == target)?;
+
+    // Convert flat index to 2D indices
+    let (_rows, cols) = array.dim();
+    Some( Point { row: (flat_index / cols) as isize, col: (flat_index % cols) as isize })
+}
