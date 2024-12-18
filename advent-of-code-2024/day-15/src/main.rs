@@ -26,16 +26,14 @@ impl World {
                 self.array[[target.row as usize, target.col as usize]] = '.';
                 self.array[[next_pos.row as usize, next_pos.col as usize]] = target_char;
                 true
-            },
+            }
             '#' => false,
             '[' => {
                 if direction.0 == 0 {
-                    if self.next_move(next_pos, direction) {
-                        self.array[[target.row as usize, target.col as usize]] = '.';
-                        self.array[[next_pos.row as usize, next_pos.col as usize]] = target_char;
-                        return true
+                    if let Some(value) = self.move_char(target, direction, next_pos, target_char) {
+                        return value;
                     }
-                    return false
+                    return false;
                 } else if self.next_move(next_pos, direction)
                     && self.next_move(
                         Point {
@@ -47,30 +45,28 @@ impl World {
                 {
                     self.array[[target.row as usize, target.col as usize]] = '.';
                     self.array[[next_pos.row as usize, next_pos.col as usize]] = target_char;
-                    return true
+                    return true;
                 }
                 false
             }
             ']' => {
                 if direction.0 == 0 {
-                    if self.next_move(next_pos, direction) {
-                        self.array[[target.row as usize, target.col as usize]] = '.';
-                        self.array[[next_pos.row as usize, next_pos.col as usize]] = target_char;
-                        return true
+                    if let Some(value) = self.move_char(target, direction, next_pos, target_char) {
+                        return value;
                     }
-                    return false
+                    return false;
                 } else if self.next_move(next_pos, direction)
                     && self.next_move(
-                    Point {
-                        row: next_pos.row,
-                        col: next_pos.col - 1,
-                    },
-                    direction,
-                )
+                        Point {
+                            row: next_pos.row,
+                            col: next_pos.col - 1,
+                        },
+                        direction,
+                    )
                 {
                     self.array[[target.row as usize, target.col as usize]] = '.';
                     self.array[[next_pos.row as usize, next_pos.col as usize]] = target_char;
-                    return true
+                    return true;
                 }
                 false
             }
@@ -86,21 +82,28 @@ impl World {
         }
     }
 
+    fn move_char(&mut self, target: Point, direction: (isize, isize), next_pos: Point, target_char: char) -> Option<bool> {
+        if self.next_move(next_pos, direction) {
+            self.array[[target.row as usize, target.col as usize]] = '.';
+            self.array[[next_pos.row as usize, next_pos.col as usize]] = target_char;
+            return Some(true);
+        }
+        None
+    }
+
     pub(crate) fn checksum(&self) -> usize {
         let mut result = 0;
 
         let points = self
             .array
             .indexed_iter() // Iterate over indices and elements
-            .filter_map(
-                |(index, &elem)| {
-                    if elem == 'O' || elem == ']' {
-                        Some(index)
-                    } else {
-                        None
-                    }
-                },
-            )
+            .filter_map(|(index, &elem)| {
+                if elem == 'O' || elem == ']' {
+                    Some(index)
+                } else {
+                    None
+                }
+            })
             .collect::<Vec<(usize, usize)>>()
             .into_iter()
             .map(|(row, col)| Point {
@@ -158,25 +161,7 @@ fn get_result_part_one(array: &mut Array2<char>, moves: &Vec<char>) -> usize {
         robot,
     };
 
-    for movement in moves {
-        // println!("{:?}", movement);
-        match movement {
-            '<' => {
-                world.next_move(world.robot(), DIRECTIONS[1]);
-            }
-            '>' => {
-                world.next_move(world.robot(), DIRECTIONS[2]);
-            }
-            '^' => {
-                world.next_move(world.robot(), DIRECTIONS[0]);
-            }
-            'v' => {
-                world.next_move(world.robot(), DIRECTIONS[3]);
-            }
-            _ => {}
-        }
-        // println!("{:#?}", world);
-    }
+    movement_loop(moves, &mut world);
     world.checksum()
 }
 
@@ -187,9 +172,12 @@ fn get_result_part_two(array: &Array2<char>, moves: &Vec<char>) -> usize {
         array: expanded_map,
         robot,
     };
+    movement_loop(moves, &mut world);
+    world.checksum()
+}
+
+fn movement_loop(moves: &Vec<char>, world: &mut World) {
     for movement in moves {
-        println!("{:#?}", world);
-        println!("{:?}", movement);
         match movement {
             '<' => {
                 world.next_move(world.robot(), DIRECTIONS[1]);
@@ -205,9 +193,7 @@ fn get_result_part_two(array: &Array2<char>, moves: &Vec<char>) -> usize {
             }
             _ => {}
         }
-        // println!("{:#?}", world);
     }
-    world.checksum()
 }
 
 fn expand_map(old_array: Array2<char>) -> Array2<char> {
@@ -238,49 +224,46 @@ mod tests {
         let array: Array2<char> = Array2::from_shape_vec(
             (9, 9), // Shape: 2 rows, 3 columns
             vec![
-                '#', '#', '#', '#', '#', '#', '#', '#', '#',
-                '#', '.', '.', '.', '.', '.', '.', '.', '#',
-                '#', '.', '.', '[', ']', '.', '.', '.', '#',
-                '#', '.', '[', ']', '.', '.', '.', '.', '#',
-                '#', '.', '.', '@', '.', '.', '.', '.', '#',
-                '#', '.', '.', 'O', '.', '.', '.', '.', '#',
-                '#', '.', '.', 'O', '.', '.', '.', '.', '#',
-                '#', '.', '.', '.', '.', '.', '.', '.', '#',
-                '#', '#', '#', '#', '#', '#', '#', '#', '#',
+                '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '.', '.', '.', '.', '.', '.',
+                '.', '#', '#', '.', '.', '[', ']', '.', '.', '.', '#', '#', '.', '[', ']', '.',
+                '.', '.', '.', '#', '#', '.', '.', '@', '.', '.', '.', '.', '#', '#', '.', '.',
+                'O', '.', '.', '.', '.', '#', '#', '.', '.', 'O', '.', '.', '.', '.', '#', '#',
+                '.', '.', '.', '.', '.', '.', '.', '#', '#', '#', '#', '#', '#', '#', '#', '#',
+                '#',
             ],
         )
-            .expect("Invalid shape!");
+        .expect("Invalid shape!");
 
-        let mut world = World { array, robot: Point { row: 4, col: 3 } };
-        let result = world.next_move(Point { row: 4, col: 3 }, ( -1, 0 ));
+        let mut world = World {
+            array,
+            robot: Point { row: 4, col: 3 },
+        };
+        let result = world.next_move(Point { row: 4, col: 3 }, (-1, 0));
         println!("{:#?}", world);
         assert!(result);
     }
 
     #[test]
     fn test_sample_part_one() {
-        let (mut grid, moves) = preamble("sample");
+        let (grid, moves) = preamble("sample");
         assert_eq!(get_result_part_one(&mut grid.clone(), &moves), 10092);
     }
 
     #[test]
     fn test_input_part_one() {
-        let (mut grid, moves) = preamble("input");
+        let (grid, moves) = preamble("input");
         assert_eq!(get_result_part_one(&mut grid.clone(), &moves), 1538871);
     }
 
     #[test]
     fn test_sample_part_two() {
-        let (mut grid, moves) = preamble("sample");
-        assert_eq!(get_result_part_two(&mut grid.clone(), &moves), 875318608908);
+        let (grid, moves) = preamble("sample");
+        assert_eq!(get_result_part_two(&mut grid.clone(), &moves), 9021);
     }
 
     #[test]
     fn test_input_part_two() {
-        let (mut grid, moves) = preamble("input");
-        assert_eq!(
-            get_result_part_two(&mut grid.clone(), &moves),
-            83029436920891
-        );
+        let (grid, moves) = preamble("input");
+        assert_eq!(get_result_part_two(&mut grid.clone(), &moves), 0);
     }
 }
