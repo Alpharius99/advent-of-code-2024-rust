@@ -33,13 +33,13 @@ p=2,4 v=2,-3
 p=9,5 v=-3,-3
 ````
 
-Each robot's position is given as `p=x,y` 
-where x represents the number of tiles the robot is from the left wall 
+Each robot's position is given as `p=_x,y` 
+where _x represents the number of tiles the robot is from the left wall 
 and y represents the number of tiles from the top wall (when viewed from above). 
 So, a position of `p=0,0` means the robot is all the way in the top-left corner.
 
-Each robot's velocity is given as `v=x,y` where x and y are given in **tiles per second**. 
-Positive `x` means the robot is moving to the **right**, 
+Each robot's velocity is given as `v=_x,y` where _x and y are given in **tiles per second**. 
+Positive `_x` means the robot is moving to the **right**, 
 and positive `y` means the robot is moving **down**. 
 So, a velocity of `v=1,-2` means that each second, 
 the robot moves 1 tile to the right and 2 tiles up.

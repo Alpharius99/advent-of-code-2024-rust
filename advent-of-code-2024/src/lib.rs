@@ -1,7 +1,7 @@
+use ndarray::{Array2, ArrayBase, Ix2, OwnedRepr};
+use regex::Regex;
 use std::fs;
 use std::str::FromStr;
-use ndarray::Array2;
-use regex::Regex;
 
 pub const DIRECTIONS: [(isize, isize); 4] = [
     (-1, 0), // Above
@@ -9,6 +9,24 @@ pub const DIRECTIONS: [(isize, isize); 4] = [
     (0, 1),  // Right
     (1, 0),  // Below
 ];
+
+pub enum Direction {
+    Up(isize, isize),
+    Down(isize, isize),
+    Left(isize, isize),
+    Right(isize, isize),
+}
+
+impl Direction {
+    fn delta(&self) -> Direction {
+        match self {
+            Direction::Up(_x, _y) => Direction::Up(-1, 0),
+            Direction::Down(_x, _y) => Direction::Down(1, 0),
+            Direction::Left(_x, _y) => Direction::Left(0, -1),
+            Direction::Right(_x, _y) => Direction::Right(0, 1),
+        }
+    }
+}
 
 pub const DIAGONALES: [(isize, isize); 4] = [
     (-1, -1), // Above-left
@@ -29,9 +47,67 @@ pub const FULL_DIRECTIONS: [(isize, isize); 8] = [
 ];
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub struct Point {
+pub struct Coords {
     pub row: isize,
     pub col: isize,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub struct Element {
+    pub row: usize,
+    pub col: usize,
+    pub value: char,
+}
+
+#[derive(Debug, Clone)]
+pub struct Grid {
+    pub array: Array2<char>,
+}
+
+impl Grid {
+    pub fn new(input: String) -> Grid {
+        // Split the input into lines
+        let lines: Vec<&str> = input.lines().collect();
+        let rows: usize = lines.len();
+        let cols: usize = lines.first().map_or(0, |line| line.len());
+
+        // Create a 2D Array2 to hold the grid data
+        let mut data: ArrayBase<OwnedRepr<char>, Ix2> = Array2::from_elem((rows, cols), ' ');
+
+        // Fill the Array2 with characters from the input string
+        for (row, line) in lines.iter().enumerate() {
+            for (col, ch) in line.chars().enumerate() {
+                data[[row, col]] = ch;
+            }
+        }
+
+        Grid {
+            array: Array2::from_shape_fn((rows, cols), |(row, col)| data[[row, col]]),
+        }
+    }
+
+    pub fn get_element(&self, row: usize, col: usize) -> Option<char> {
+        if row < self.array.nrows() && col < self.array.ncols() {
+            Some(self.array[[row, col]])
+        } else {
+            None
+        }
+    }
+    
+    pub fn set_element(&mut self, row: usize, col: usize, value: char) {
+        if row < self.array.nrows() && col < self.array.ncols() {
+            self.array[[row, col]] = value;
+        }
+    }
+
+    pub fn get_element_by_value(&self, value: char) -> Option<(usize, usize)> {
+        // Flatten the array and find the position of the target value
+        let flat_index: usize = self.array.iter().position(|&x| x == value)?;
+
+        // Convert flat index to 2D indices
+        let (_rows, cols) = self.array.dim();
+        Some((flat_index / cols, flat_index % cols))
+    }
 }
 
 pub fn get_file_contents(filename: &str) -> String {
@@ -137,7 +213,7 @@ pub fn get_2d_array_char(input: &str) -> Array2<char> {
     let num_cols = rows[0].len();
 
     // Flatten the rows into a single vector
-    let flattened: Vec< char> = rows.into_iter().flatten().collect();
+    let flattened: Vec<char> = rows.into_iter().flatten().collect();
 
     // Convert the flattened vector into an Array2
     Array2::from_shape_vec((num_rows, num_cols), flattened).unwrap()
@@ -153,11 +229,14 @@ pub fn get_value_by_regex(s: &str, re: &Regex) -> isize {
         .unwrap()
 }
 
-pub fn find_coords_of_char(array: &Array2<char>, target: char) -> Option<Point> {
+pub fn find_coords_of_char(array: &Array2<char>, target: char) -> Option<Coords> {
     // Flatten the array and find the position of the target value
     let flat_index: usize = array.iter().position(|&x| x == target)?;
 
     // Convert flat index to 2D indices
     let (_rows, cols) = array.dim();
-    Some( Point { row: (flat_index / cols) as isize, col: (flat_index % cols) as isize })
+    Some(Coords {
+        row: (flat_index / cols) as isize,
+        col: (flat_index % cols) as isize,
+    })
 }
