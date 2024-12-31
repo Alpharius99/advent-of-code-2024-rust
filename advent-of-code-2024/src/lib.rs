@@ -10,24 +10,6 @@ pub const DIRECTIONS: [(isize, isize); 4] = [
     (1, 0),  // Below
 ];
 
-pub enum Direction {
-    Up(isize, isize),
-    Down(isize, isize),
-    Left(isize, isize),
-    Right(isize, isize),
-}
-
-impl Direction {
-    fn delta(&self) -> Direction {
-        match self {
-            Direction::Up(_x, _y) => Direction::Up(-1, 0),
-            Direction::Down(_x, _y) => Direction::Down(1, 0),
-            Direction::Left(_x, _y) => Direction::Left(0, -1),
-            Direction::Right(_x, _y) => Direction::Right(0, 1),
-        }
-    }
-}
-
 pub const DIAGONALES: [(isize, isize); 4] = [
     (-1, -1), // Above-left
     (1, -1),  // Below-left
