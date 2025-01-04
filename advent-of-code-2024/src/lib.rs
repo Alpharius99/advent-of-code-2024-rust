@@ -75,7 +75,7 @@ impl Grid {
             None
         }
     }
-    
+
     pub fn set_element(&mut self, row: usize, col: usize, value: char) {
         if row < self.array.nrows() && col < self.array.ncols() {
             self.array[[row, col]] = value;
@@ -139,14 +139,14 @@ where
     input.parse::<T>()
 }
 
-pub fn print_grid(grid: &Vec<Vec<char>>) {
+pub fn print_grid(grid: &[Vec<char>]) {
     for row in grid.iter() {
-        let joined: String = row.into_iter().collect();
+        let joined: String = row.iter().collect();
         println!("{:?}", joined);
     }
 }
 
-pub fn join_integers<T>(numbers: &Vec<T>, delimiter: &str) -> String
+pub fn join_integers<T>(numbers: &[T], delimiter: &str) -> String
 where
     T: FromStr + ToString,
 {
