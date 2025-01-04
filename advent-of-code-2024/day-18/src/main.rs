@@ -89,9 +89,9 @@ impl Tile {
 }
 
 fn main() {
-    let file_content = bench(|| preamble());
-    // println!("{grid:?}");
-    let p1 = bench(|| p1(&file_content));
+    let file_content = bench(|| preamble(Cfg::FILE_PATH));
+
+    let p1 = bench(|| p1(&file_content, Cfg::GRID_SIZE, Cfg::COUNTER));
     match p1 {
         Some(cost) => {
             println!("Part 1: {:?}", cost);
@@ -99,47 +99,44 @@ fn main() {
         None => println!("Part 1: No path found"),
     }
 
-    let p2 = bench(|| crate::p2(&file_content));
+    let p2 = bench(|| p2(&file_content, Cfg::GRID_SIZE));
     match p2 {
-        Some(cost) => {
-            println!("Part 2: {:?}", cost);
+        Some(coords) => {
+            println!("Part 2: {:?}", coords);
         }
         None => println!("Part 2: No path found"),
     }
 }
 
-fn preamble() -> String {
-    get_file_contents(Cfg::FILE_PATH)
+fn preamble(file_path: &str) -> String {
+    get_file_contents(file_path)
 }
 
-fn p1(file_content: &str) -> Option<usize> {
-    let mut grid = Array2::from_elem((Cfg::GRID_SIZE + 1, Cfg::GRID_SIZE + 1), '.');
+fn p1(file_content: &str, size: usize, count: usize) -> Option<usize> {
+    let mut grid = Array2::from_elem((size + 1, size + 1), '.');
 
-    fill_grid(file_content, &mut grid, Cfg::COUNTER);
+    fill_grid(file_content, &mut grid, count);
 
     let (_, cost) = find_path(&grid)?;
     Some(cost as usize)
 }
 
-fn p2(file_content: &str) -> Option<&str> {
+fn p2(file_content: &str, size: usize) -> Option<&str> {
     let mut low = 0;
     let mut high = file_content.lines().count();
     let mut result = None;
 
     while low <= high {
-        let mut grid = Array2::from_elem((Cfg::GRID_SIZE + 1, Cfg::GRID_SIZE + 1), '.');
+        let mut grid = Array2::from_elem((size + 1, size + 1), '.');
         let mid = low + (high - low) / 2;
-        println!("mid: {}", mid);
         fill_grid(file_content, &mut grid, mid);
 
         match find_path(&grid) {
-            Some((_, cost)) => {
-                println!("cost: {}", cost);
+            Some((_, _)) => {
                 result = Some(file_content.lines().collect::<Vec<&str>>()[mid]);
                 low = mid + 1;
             }
             None => {
-                println!("no path found");
                 high = mid - 1;
             }
         }
@@ -185,28 +182,45 @@ fn find_path(grid: &Array2<char>) -> Option<(Vec<Tile>, u32)> {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
 
-    // #[test]
-    // fn test_sample_part_one() {
-    //     let grid = preamble_p1();
-    //     assert_eq!(find_path(&grid).unwrap().1, 22);
-    // }
+    #[test]
+    fn test_sample_part_one() {
+        let file_content = preamble("sample");
+        let result = p1(&file_content, 6, 12);
+        match result {
+            Some(_) => assert_eq!(result.unwrap(), 22),
+            None => assert_eq!(result, None),
+        }
+    }
 
-    // #[test]
-    // fn test_input_part_one() {
-    //     let grid = preamble("input");
-    //     assert_eq!(get_result_part_one(&grid), 276);
-    // }
-    //
-    // #[test]
-    // fn test_sample_part_two() {
-    //     let grid = preamble("sample");
-    //     assert_eq!(get_result_part_two(&grid), "6,1");
-    // }
-    //
-    // #[test]
-    // fn test_input_part_two() {
-    //     let grid = preamble("input");
-    //     assert_eq!(get_result_part_two(&grid), "60,37");
-    // }
+    #[test]
+    fn test_input_part_one() {
+        let file_content = preamble("input");
+        let result = p1(&file_content, 70, 1024);
+        match result {
+            Some(_) => assert_eq!(result.unwrap(), 276),
+            None => assert_eq!(result, None),
+        }
+    }
+
+    #[test]
+    fn test_sample_part_two() {
+        let file_content = preamble("sample");
+        let result = p2(&file_content, 6);
+        match result {
+            Some(_) => assert_eq!(result.unwrap(), "6,1"),
+            None => assert_eq!(result, None),
+        }
+    }
+
+    #[test]
+    fn test_input_part_two() {
+        let file_content = preamble("input");
+        let result = p2(&file_content, 70);
+        match result {
+            Some(_) => assert_eq!(result.unwrap(), "60,37"),
+            None => assert_eq!(result, None),
+        }
+    }
 }
