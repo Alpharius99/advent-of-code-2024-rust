@@ -1,5 +1,5 @@
 [package]
-name = "advent-of-code-2024"
+name = "day-20"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,11 +8,13 @@ ndarray = "0.16.1"
 regex = "1.11.1"
 pathfinding = "4.13.0"
 
-[workspace]
-members = [
-    "day-*",
-]
-
 [lib]
 name = "utils"
-path = "src/lib.rs"
+path = "../src/lib.rs"
+
+[[bin]]
+name = "day-20"
+path = "src/main.rs"
+
+[features]
+debug = []

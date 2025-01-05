@@ -1,4 +1,5 @@
 use ndarray::{Array2, ArrayBase, Ix2, OwnedRepr};
+use pathfinding::prelude::dijkstra;
 use regex::Regex;
 use std::fs;
 use std::str::FromStr;
@@ -89,6 +90,75 @@ impl Grid {
         // Convert flat index to 2D indices
         let (_rows, cols) = self.array.dim();
         Some((flat_index / cols, flat_index % cols))
+    }
+
+    pub fn get_paths(&self, start: Tile, end: Tile) -> Option<(Vec<Tile>, usize)> {
+        let end_tile = |state: &Tile| state.row == end.row && state.col == end.col;
+        println!("{:?}", end);
+
+        dijkstra(&start, |tile| tile.neighbors(&self.array, 0), end_tile)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct Tile {
+    pub row: usize,
+    pub col: usize,
+    pub direction: usize, // 0: Up, 1: Right, 2: Down, 3: Left
+}
+
+impl Tile {
+    pub fn neighbors(&self, grid: &Array2<char>, rotation_cost: usize) -> Vec<(Tile, usize)> {
+        let directions = [
+            (-1, 0), // Up
+            (0, 1),  // Right
+            (1, 0),  // Down
+            (0, -1), // Left
+        ];
+
+        let mut neighbors = Vec::new();
+
+        for (dir, &(dr, dc)) in directions.iter().enumerate() {
+            let new_row = self.row as isize + dr;
+            let new_col = self.col as isize + dc;
+
+            if new_row >= 0
+                && new_row < grid.nrows() as isize
+                && new_col >= 0
+                && new_col < grid.ncols() as isize
+            {
+                let new_row = new_row as usize;
+                let new_col = new_col as usize;
+
+                // Skip obstacles
+                if grid[[new_row, new_col]] == '#' {
+                    continue;
+                }
+
+                // Cost of moving
+                let step_cost = 1;
+
+                // Cost of changing the direction
+                let rotation_cost = if dir == self.direction {
+                    0
+                } else {
+                    rotation_cost
+                };
+
+                let total_cost = step_cost + rotation_cost;
+
+                neighbors.push((
+                    Tile {
+                        row: new_row,
+                        col: new_col,
+                        direction: dir,
+                    },
+                    total_cost,
+                ));
+            }
+        }
+
+        neighbors
     }
 }
 
