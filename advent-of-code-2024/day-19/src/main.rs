@@ -26,9 +26,8 @@ where
 
 fn main() {
     let (patterns, designs) = bench(|| preamble(Cfg::FILE_PATH));
-    let p1 = bench(|| p1(&patterns, &designs));
+    let (p1, p2) = bench(|| count(&patterns, &designs));
     println!("Part 1: {:?}", p1);
-    let p2 = bench(|| p2(&patterns, &designs));
     println!("Part 2: {:?}", p2);
 }
 
@@ -50,44 +49,19 @@ fn preamble(path: &str) -> (Vec<String>, Vec<String>) {
     (patterns, designs)
 }
 
-fn p1(patterns: &Vec<String>, designs: &Vec<String>) -> usize {
+fn count(patterns: &Vec<String>, designs: &Vec<String>) -> (usize, usize) {
     let mut count = 0;
+    let mut count_all = 0;
 
     for design in designs {
-        if can_compose(design, patterns) {
+        let all = count_combinations(design, patterns);
+        if all > 0 {
             count += 1;
+            count_all += all;
         }
     }
 
-    count
-}
-
-fn p2(patterns: &Vec<String>, designs: &Vec<String>) -> usize {
-    let mut count = 0;
-
-    for design in designs {
-        count += count_combinations(design, patterns);
-    }
-
-    count
-}
-
-fn can_compose(target: &str, substrings: &Vec<String>) -> bool {
-    let target_len = target.len();
-    let mut dp = vec![false; target_len + 1];
-    dp[0] = true;
-
-    for i in 0..=target_len {
-        if dp[i] {
-            for substr in substrings {
-                if target[i..].starts_with(substr) {
-                    dp[i + substr.len()] = true;
-                }
-            }
-        }
-    }
-
-    dp[target_len]
+    (count, count_all)
 }
 
 fn count_combinations(target: &str, substrings: &Vec<String>) -> usize {
@@ -115,13 +89,13 @@ mod tests {
     #[test]
     fn test_sample_part_one() {
         let (patterns, designs) = preamble("sample");
-        assert_eq!(p1(&patterns, &designs), 6);
+        assert_eq!(count(&patterns, &designs), 6);
     }
 
     #[test]
     fn test_input_part_one() {
         let (patterns, designs) = preamble("input");
-        assert_eq!(p1(&patterns, &designs), 369);
+        assert_eq!(count(&patterns, &designs), 369);
     }
 
     #[test]
