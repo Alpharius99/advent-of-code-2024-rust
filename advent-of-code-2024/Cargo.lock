@@ -131,6 +131,11 @@ dependencies = [
 [[package]]
 name = "day-19"
 version = "0.1.0"
+dependencies = [
+ "ndarray",
+ "pathfinding",
+ "regex",
+]
 
 [[package]]
 name = "day-2"
