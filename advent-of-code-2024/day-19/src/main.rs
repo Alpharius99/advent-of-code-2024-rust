@@ -89,24 +89,28 @@ mod tests {
     #[test]
     fn test_sample_part_one() {
         let (patterns, designs) = preamble("sample");
-        assert_eq!(count(&patterns, &designs), 6);
+        let (p1, _) = count(&patterns, &designs);
+        assert_eq!(p1, 6);
     }
 
     #[test]
     fn test_input_part_one() {
         let (patterns, designs) = preamble("input");
-        assert_eq!(count(&patterns, &designs), 369);
+        let (p1, _) = count(&patterns, &designs);
+        assert_eq!(p1, 369);
     }
 
     #[test]
     fn test_sample_part_two() {
         let (patterns, designs) = preamble("sample");
-        assert_eq!(p2(&patterns, &designs), 16);
+        let (_, p2) = count(&patterns, &designs);
+        assert_eq!(p2, 16);
     }
 
     #[test]
     fn test_input_part_two() {
         let (patterns, designs) = preamble("input");
-        assert_eq!(p2(&patterns, &designs), 761826581538190);
+        let (_, p2) = count(&patterns, &designs);
+        assert_eq!(p2, 761826581538190);
     }
 }
